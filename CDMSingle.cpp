@@ -1742,11 +1742,11 @@ void CDM::OnGetTagItem(CFlightPlan FlightPlan, CRadarTarget RadarTarget, int Ite
 							string annotTSAC = FlightPlan.GetControllerAssignedData().GetFlightStripAnnotation(2);
 							if (!annotTSAC.empty()) {
 								ItemRGB = TAG_GREEN;
-								strcpy_s(sItemString, 16, "¤");
+								strcpy_s(sItemString, 16, "ï¿½");
 							}
 							else {
 								ItemRGB = TAG_GREEN;
-								strcpy_s(sItemString, 16, "¬");
+								strcpy_s(sItemString, 16, "ï¿½");
 							}
 						}
 						else if (ItemCode == TAG_ITEM_ASAT)
@@ -2778,11 +2778,11 @@ void CDM::OnGetTagItem(CFlightPlan FlightPlan, CRadarTarget RadarTarget, int Ite
 									//*pColorCode = TAG_COLOR_RGB_DEFINED;
 									ItemRGB = TAG_GREEN;
 								}
-								strcpy_s(sItemString, 16, "¤");
+								strcpy_s(sItemString, 16, "ï¿½");
 							}
 							else {
 								ItemRGB = TAG_GREEN;
-								strcpy_s(sItemString, 16, "¬");
+								strcpy_s(sItemString, 16, "ï¿½");
 							}
 						}
 						else if (ItemCode == TAG_ITEM_TSAT)
@@ -3543,11 +3543,11 @@ void CDM::OnGetTagItem(CFlightPlan FlightPlan, CRadarTarget RadarTarget, int Ite
 									//*pColorCode = TAG_COLOR_RGB_DEFINED;
 									ItemRGB = TAG_GREEN;
 								}
-								strcpy_s(sItemString, 16, "¤");
+								strcpy_s(sItemString, 16, "ï¿½");
 							}
 							else {
 								ItemRGB = TAG_GREEN;
-								strcpy_s(sItemString, 16, "¬");
+								strcpy_s(sItemString, 16, "ï¿½");
 							}
 						}
 						else if (ItemCode == TAG_ITEM_TSAT)
@@ -5353,6 +5353,7 @@ string CDM::getCidByCallsign(string callsign) {
 		curl_easy_setopt(curl, CURLOPT_URL, "https://data.vatsim.net/v3/vatsim-data.json");
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
 		result = curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
 	}
@@ -5536,6 +5537,7 @@ int CDM::GetVersion() {
 		curl_easy_setopt(curl, CURLOPT_URL, "https://raw.githubusercontent.com/rpuig2001/CDM/master/version.txt");
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
 		result = curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
 	}
