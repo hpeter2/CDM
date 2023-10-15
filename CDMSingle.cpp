@@ -3866,7 +3866,7 @@ bool CDM::getRateFromUrl(string url) {
 	long responseCode;
 	curl = curl_easy_init();
 	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, url);
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
@@ -5384,7 +5384,7 @@ void CDM::getFlowData() {
 		long responseCode;
 		curl = curl_easy_init();
 		if (curl) {
-			curl_easy_setopt(curl, CURLOPT_URL, flowRestrictionsUrl);
+			curl_easy_setopt(curl, CURLOPT_URL, flowRestrictionsUrl.c_str());
 			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 			curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
@@ -5560,7 +5560,7 @@ bool CDM::getCtotsFromUrl(string code)
 	long responseCode;
 	curl = curl_easy_init();
 	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, vatcanUrl);
+		curl_easy_setopt(curl, CURLOPT_URL, vatcanUrl.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
@@ -5594,7 +5594,7 @@ bool CDM::getTaxiZonesFromUrl(string url) {
 	long responseCode;
 	curl = curl_easy_init();
 	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, url);
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
@@ -5644,7 +5644,7 @@ void CDM::getCADvalues() {
 	long responseCode;
 	curl = curl_easy_init();
 	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, cadUrl);
+		curl_easy_setopt(curl, CURLOPT_URL, cadUrl.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
@@ -5700,7 +5700,7 @@ vector<CAD> CDM::returnCADvalues(string url)
 	long responseCode;
 	curl = curl_easy_init();
 	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, url);
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
