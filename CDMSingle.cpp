@@ -1742,11 +1742,11 @@ void CDM::OnGetTagItem(CFlightPlan FlightPlan, CRadarTarget RadarTarget, int Ite
 							string annotTSAC = FlightPlan.GetControllerAssignedData().GetFlightStripAnnotation(2);
 							if (!annotTSAC.empty()) {
 								ItemRGB = TAG_GREEN;
-								strcpy_s(sItemString, 16, "¤");
+								strcpy_s(sItemString, 16, "ï¿½");
 							}
 							else {
 								ItemRGB = TAG_GREEN;
-								strcpy_s(sItemString, 16, "¬");
+								strcpy_s(sItemString, 16, "ï¿½");
 							}
 						}
 						else if (ItemCode == TAG_ITEM_ASAT)
@@ -2778,11 +2778,11 @@ void CDM::OnGetTagItem(CFlightPlan FlightPlan, CRadarTarget RadarTarget, int Ite
 									//*pColorCode = TAG_COLOR_RGB_DEFINED;
 									ItemRGB = TAG_GREEN;
 								}
-								strcpy_s(sItemString, 16, "¤");
+								strcpy_s(sItemString, 16, "ï¿½");
 							}
 							else {
 								ItemRGB = TAG_GREEN;
-								strcpy_s(sItemString, 16, "¬");
+								strcpy_s(sItemString, 16, "ï¿½");
 							}
 						}
 						else if (ItemCode == TAG_ITEM_TSAT)
@@ -3543,11 +3543,11 @@ void CDM::OnGetTagItem(CFlightPlan FlightPlan, CRadarTarget RadarTarget, int Ite
 									//*pColorCode = TAG_COLOR_RGB_DEFINED;
 									ItemRGB = TAG_GREEN;
 								}
-								strcpy_s(sItemString, 16, "¤");
+								strcpy_s(sItemString, 16, "ï¿½");
 							}
 							else {
 								ItemRGB = TAG_GREEN;
-								strcpy_s(sItemString, 16, "¬");
+								strcpy_s(sItemString, 16, "ï¿½");
 							}
 						}
 						else if (ItemCode == TAG_ITEM_TSAT)
@@ -3866,7 +3866,7 @@ bool CDM::getRateFromUrl(string url) {
 	long responseCode;
 	curl = curl_easy_init();
 	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, url);
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
@@ -3875,7 +3875,7 @@ bool CDM::getRateFromUrl(string url) {
 		curl_easy_cleanup(curl);
 	}
 
-	if (responseCode == 404 || CURLE_OPERATION_TIMEDOUT == result) {
+	if (responseCode == 404 || CURLE_OK != result) {
 		// handle error 404
 		sendMessage("UNABLE TO LOAD TaxiZones URL...");
 	}
@@ -5346,14 +5346,15 @@ void CDM::checkFlowStatus(Plane plane) {
 
 string CDM::getCidByCallsign(string callsign) {
 	CURL* curl;
-	CURLcode res;
+	CURLcode result;
 	std::string readBuffer;
 	curl = curl_easy_init();
 	if (curl) {
 		curl_easy_setopt(curl, CURLOPT_URL, "https://data.vatsim.net/v3/vatsim-data.json");
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-		res = curl_easy_perform(curl);
+		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
+		result = curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
 	}
 	Json::Reader reader;
@@ -5378,21 +5379,21 @@ void CDM::getFlowData() {
 	if (!flowRestrictionsUrl.empty()) {
 		vector<Flow> flowDataTemp;
 		CURL* curl;
-		CURLcode res;
+		CURLcode result;
 		std::string readBuffer;
 		long responseCode;
 		curl = curl_easy_init();
 		if (curl) {
-			curl_easy_setopt(curl, CURLOPT_URL, flowRestrictionsUrl);
+			curl_easy_setopt(curl, CURLOPT_URL, flowRestrictionsUrl.c_str());
 			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 			curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
-			res = curl_easy_perform(curl);
+			result = curl_easy_perform(curl);
 			curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &responseCode);
 			curl_easy_cleanup(curl);
 		}
 
-		if (responseCode == 404 || CURLE_OPERATION_TIMEDOUT == res){
+		if (responseCode == 404 || CURLE_OK != result){
 			// handle error 404
 			sendMessage("UNABLE TO LOAD FlowRestrictions URL...");
 		}
@@ -5536,6 +5537,7 @@ int CDM::GetVersion() {
 		curl_easy_setopt(curl, CURLOPT_URL, "https://raw.githubusercontent.com/rpuig2001/CDM/master/version.txt");
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
 		result = curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
 	}
@@ -5553,21 +5555,21 @@ bool CDM::getCtotsFromUrl(string code)
 	evCtots.clear();
 	string vatcanUrl = code;
 	CURL* curl;
-	CURLcode res;
+	CURLcode result;
 	std::string readBuffer;
 	long responseCode;
 	curl = curl_easy_init();
 	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, vatcanUrl);
+		curl_easy_setopt(curl, CURLOPT_URL, vatcanUrl.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
-		res = curl_easy_perform(curl);
+		result = curl_easy_perform(curl);
 		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &responseCode);
 		curl_easy_cleanup(curl);
 	}
 
-	if (responseCode == 404 || CURLE_OPERATION_TIMEDOUT == res) {
+	if (responseCode == 404 || CURLE_OK != result) {
 		// handle error 404
 		sendMessage("UNABLE TO LOAD CTOTs FROM VATCAN...");
 	}
@@ -5592,7 +5594,7 @@ bool CDM::getTaxiZonesFromUrl(string url) {
 	long responseCode;
 	curl = curl_easy_init();
 	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, url);
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
@@ -5601,7 +5603,7 @@ bool CDM::getTaxiZonesFromUrl(string url) {
 		curl_easy_cleanup(curl);
 	}
 
-	if (responseCode == 404 || CURLE_OPERATION_TIMEDOUT == result) {
+	if (responseCode == 404 || CURLE_OK != result) {
 		// handle error 404
 		sendMessage("UNABLE TO LOAD TaxiZones URL...");
 	}
@@ -5642,16 +5644,16 @@ void CDM::getCADvalues() {
 	long responseCode;
 	curl = curl_easy_init();
 	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, cadUrl);
+		curl_easy_setopt(curl, CURLOPT_URL, cadUrl.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
 		result = curl_easy_perform(curl);
 		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &responseCode);
 		curl_easy_cleanup(curl);
-	}
+	} 
 
-	if (responseCode == 404 || CURLE_OPERATION_TIMEDOUT == result) {
+	if (responseCode == 404 || CURLE_OK != result) {
 		// handle error 404
 		sendMessage("UNABLE TO LOAD CAD URL...");
 	}
@@ -5698,7 +5700,7 @@ vector<CAD> CDM::returnCADvalues(string url)
 	long responseCode;
 	curl = curl_easy_init();
 	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, url);
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);
@@ -5707,7 +5709,7 @@ vector<CAD> CDM::returnCADvalues(string url)
 		curl_easy_cleanup(curl);
 	}
 
-	if (responseCode == 404 || CURLE_OPERATION_TIMEDOUT == result) {
+	if (responseCode == 404 || CURLE_OK != result) {
 		// handle error 404
 		sendMessage("UNABLE TO LOAD CAD URL...");
 	}
